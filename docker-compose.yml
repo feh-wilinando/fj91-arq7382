@@ -1,0 +1,41 @@
+version: '3'
+services:
+  loadBalance:
+    image: nginx:alpine
+    volumes:
+      - ./config:/etc/nginx/conf.d/
+      - ./ssl:/etc/nginx/ssl/
+    ports:
+      - "8090:443"
+    networks:
+      - fj91
+    depends_on:
+      - app1
+      - app2
+    restart: on-failure
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - fj91    
+  app1:
+    image: wilinando/performance
+    environment:
+      - MYSQL_HOST=db
+    networks:
+      - fj91
+    depends_on:
+      - db
+    restart: on-failure
+  app2:
+    image: wilinando/performance
+    environment:
+      - MYSQL_HOST=db
+    networks:
+      - fj91
+    depends_on:
+      - db
+    restart: on-failure    
+networks:
+  fj91:
