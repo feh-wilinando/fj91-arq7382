@@ -8,6 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
+      - image: docker:17.12.0-ce-git
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -21,8 +22,9 @@ jobs:
       MAVEN_OPTS: -Xmx3200m
     
     steps:
+      - setup_remote_docker
       - checkout
-
+      
       # Download and cache dependencies
       - restore_cache:
           keys:
